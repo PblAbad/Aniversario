@@ -1,0 +1,78 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-100 to-pink-100 py-12 animate-gradient">
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-6xl w-full">
+      <!-- Título -->
+      <h2 class="text-4xl font-bold text-pink-600 mb-8 text-center">Nuestras Canciones</h2>
+  
+      <!-- Lista de canciones en bloques de 5 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+        <div
+          *ngFor="let song of songs; let i = index"
+          (click)="playSong(i)"
+          class="flex flex-col items-center p-4 rounded-xl cursor-pointer hover:bg-pink-50 transition duration-300 transform hover:scale-105"
+        >
+          <!-- Portada del álbum -->
+          <img
+            [src]="song.cover"
+            alt="Portada del álbum"
+            class="w-full h-48 object-cover rounded-lg shadow-md"
+          />
+          <!-- Información de la canción -->
+          <div class="mt-4 text-center">
+            <p class="text-lg font-semibold text-pink-600">{{ song.title }}</p>
+            <p class="text-sm text-gray-500">{{ song.artist }}</p>
+          </div>
+          <!-- Ícono de reproducción con imagen -->
+          <span class="mt-2 text-pink-600">
+            <img
+              [src]="currentSongIndex === i && isPlaying ? 'assets/icons/pause.png' : 'assets/icons/play.png'"
+              alt="Play/Pause"
+              class="w-6 h-6"
+            />
+          </span>
+        </div>
+      </div>
+  
+      <!-- Mini-reproductor -->
+      <div class="mt-8 bg-pink-50 rounded-xl p-6 shadow-inner">
+        <div class="flex items-center space-x-6">
+          <!-- Portada de la canción actual -->
+          <img
+            [src]="currentSong.cover"
+            alt="Portada de la canción actual"
+            class="w-16 h-16 rounded-lg shadow-md"
+          />
+          <!-- Información de la canción actual -->
+          <div class="flex-1">
+            <p class="text-xl font-semibold text-pink-600">{{ currentSong.title }}</p>
+            <p class="text-sm text-gray-500">{{ currentSong.artist }}</p>
+          </div>
+          <!-- Controles del reproductor con imágenes -->
+          <div class="flex items-center space-x-4">
+            <button
+              (click)="previousSong()"
+              class="p-3 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition duration-300 transform hover:scale-110"
+            >
+              <img src="assets/icons/Back.png" alt="Anterior" class="w-6 h-6" />
+            </button>
+            <button
+              (click)="playPause()"
+              class="p-3 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition duration-300 transform hover:scale-110"
+            >
+              <img
+                [src]="isPlaying ? 'assets/icons/pause.png' : 'assets/icons/play.png'"
+                alt="Play/Pause"
+                class="w-6 h-6"
+              />
+            </button>
+            <button
+              (click)="nextSong()"
+              class="p-3 bg-pink-600 text-white rounded-full hover:bg-pink-700 transition duration-300 transform hover:scale-110"
+            >
+              <img src="assets/icons/Forward.png" alt="Siguiente" class="w-6 h-6" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

@@ -1,0 +1,38 @@
+<div class="min-h-screen flex flex-col justify-center items-center bg-gradient-to-r from-pink-100 to-purple-100">
+    <!-- Mensaje grande -->
+    <h1 class="text-6xl md:text-8xl font-bold text-pink-600 mb-8 text-center">
+      Feliz 2do Aniversario
+    </h1>
+  
+    <!-- Carrusel de fotos -->
+    <div class="w-full max-w-3xl mx-auto overflow-hidden rounded-lg shadow-lg">
+      <div class="relative">
+        <!-- Imágenes del carrusel -->
+        <div *ngFor="let image of images; let i = index" [ngClass]="{'hidden': i !== currentIndex}">
+          <img [src]="image" alt="Foto de aniversario" class="w-full h-96 object-cover" />
+        </div>
+  
+        <!-- Botones de navegación del carrusel -->
+        <button
+          (click)="prevImage()"
+          class="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full ml-4 hover:bg-opacity-75"
+        >
+          ❮
+        </button>
+        <button
+          (click)="nextImage()"
+          class="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-50 p-2 rounded-full mr-4 hover:bg-opacity-75"
+        >
+          ❯
+        </button>
+      </div>
+    </div>
+  
+    <!-- Botón para continuar -->
+    <a
+      routerLink="/timeline"
+      class="mt-8 px-6 py-3 bg-pink-600 text-white font-semibold rounded-lg hover:bg-pink-700 transition duration-300"
+    >
+      Ver Nuestra Historia
+    </a>
+  </div>
