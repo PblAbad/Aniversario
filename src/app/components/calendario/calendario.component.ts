@@ -13,11 +13,11 @@ export class CalendarioComponent {
   currentDate = new Date();
   currentMonth = this.currentDate.toLocaleString('default', { month: 'long' });
   currentYear = this.currentDate.getFullYear();
-  weeks: { days: (number | null)[]; hours: string }[] = []; // Matriz de semanas con días y horas
+  weeks: { days: (number | null)[]; hours: number }[] = []; // Matriz de semanas con días y horas
   selectedDay: number | null = null;
   entryTime: string = '';
   exitTime: string = '';
-  records: { day: number; month: number; year: number; hours: string }[] = [];
+  records: { day: number; month: number; year: number; hours: number }[] = [];
 
   ngOnInit(): void {
     this.generateCalendar();
@@ -36,7 +36,7 @@ export class CalendarioComponent {
     const totalDays = lastDay.getDate();
 
     this.weeks = [];
-    let week: { days: (number | null)[]; hours: string } = { days: [], hours: '0 horas y 0 minutos' };
+    let week: { days: (number | null)[]; hours: number } = { days: [], hours: 0 };
 
     // Rellenar los días vacíos al inicio del mes
     for (let i = 0; i < startDay; i++) {
@@ -48,7 +48,7 @@ export class CalendarioComponent {
       week.days.push(day);
       if (week.days.length === 7) {
         this.weeks.push(week);
-        week = { days: [], hours: '0 horas y 0 minutos' };
+        week = { days: [], hours: 0 };
       }
     }
 
@@ -71,27 +71,17 @@ export class CalendarioComponent {
     this.selectedDay = null;
   }
 
-  calculateHoursAndMinutes(entryTime: string, exitTime: string): string {
-    const entry = new Date(`1970-01-01T${entryTime}`);
-    const exit = new Date(`1970-01-01T${exitTime}`);
-    const diff = exit.getTime() - entry.getTime(); // Diferencia en milisegundos
-
-    const totalMinutes = Math.floor(diff / (1000 * 60)); // Convertir a minutos
-    const hours = Math.floor(totalMinutes / 60); // Obtener las horas
-    const minutes = totalMinutes % 60; // Obtener los minutos restantes
-
-    return `${hours} horas y ${minutes} minutos`;
-  }
-
   saveHours(): void {
     if (this.entryTime && this.exitTime && this.selectedDay) {
-      const hoursWorked = this.calculateHoursAndMinutes(this.entryTime, this.exitTime);
+      const entry = new Date(`1970-01-01T${this.entryTime}`);
+      const exit = new Date(`1970-01-01T${this.exitTime}`);
+      const hours = (exit.getTime() - entry.getTime()) / (1000 * 60 * 60);
 
       this.records.push({
         day: this.selectedDay,
         month: this.currentDate.getMonth(),
         year: this.currentDate.getFullYear(),
-        hours: hoursWorked,
+        hours,
       });
       this.saveRecords();
       this.calculateWeeklyHours();
@@ -99,7 +89,7 @@ export class CalendarioComponent {
     }
   }
 
-  getHours(day: number): string | null {
+  getHours(day: number): number | null {
     const record = this.records.find(
       (r) =>
         r.day === day &&
@@ -114,25 +104,15 @@ export class CalendarioComponent {
     const month = this.currentDate.getMonth();
 
     this.weeks.forEach((week) => {
-      let totalMinutes = 0;
-
-      week.days.forEach((day) => {
+      week.hours = week.days.reduce((sum: number, day) => {
         if (day !== null) {
           const record = this.records.find(
             (r) => r.day === day && r.month === month && r.year === year
           );
-          if (record) {
-            const [hours, minutes] = record.hours
-              .split('horas y')
-              .map((part) => parseInt(part.trim(), 10));
-            totalMinutes += hours * 60 + minutes;
-          }
+          return sum + (record ? record.hours : 0);
         }
-      });
-
-      const hours = Math.floor(totalMinutes / 60);
-      const minutes = totalMinutes % 60;
-      week.hours = `${hours} horas y ${minutes} minutos`;
+        return sum;
+      }, 0);
     });
   }
 
@@ -161,4 +141,6 @@ export class CalendarioComponent {
     this.generateCalendar();
   }
 }
+
+
 
