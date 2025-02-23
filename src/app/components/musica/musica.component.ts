@@ -102,7 +102,7 @@ export class MusicaComponent implements OnInit {
       this.isPlaying = false;
     }
   }
-
+  
   nextSong(): void {
     this.currentSongIndex = (this.currentSongIndex + 1) % this.songs.length;
     this.currentSong = this.songs[this.currentSongIndex];

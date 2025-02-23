@@ -17,7 +17,22 @@ export class MensajesComponent implements OnInit{
   mensajes: string[] = [
     "Tal",
     "Cual",
-    "Pascual"
+    "Pascual",
+    "we",
+    "rw",
+    "dsf",
+    "sf",
+    "xc",
+    "wewe",
+    "qrqr",
+    "adg",
+    "hjfgd",
+    "kgh",
+    "ñloi",
+    "pio",
+    "gdf",
+    "vbvb",
+    "nmnmnm",
   ]
 
   ngOnInit(): void {

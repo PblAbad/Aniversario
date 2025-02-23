@@ -35,6 +35,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'calendario',
+        loadComponent: () =>
+          import('./components/calendario/calendario.component').then(
+            (m) => m.CalendarioComponent
+          ),
+      },
+      {
         path: '**',
         redirectTo: 'home',
       },
