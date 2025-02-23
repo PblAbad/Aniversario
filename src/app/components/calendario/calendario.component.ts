@@ -13,16 +13,18 @@ export class CalendarioComponent {
   currentDate = new Date();
   currentMonth = this.currentDate.toLocaleString('default', { month: 'long' });
   currentYear = this.currentDate.getFullYear();
-  weeks: { days: (number | null)[]; hours: number }[] = []; // Matriz de semanas con días y horas
+  weeks: { days: (number | null)[]; hours: string }[] = []; // Matriz de semanas con días y horas
   selectedDay: number | null = null;
   entryTime: string = '';
   exitTime: string = '';
-  records: { day: number; month: number; year: number; hours: number }[] = [];
+  records: { day: number; month: number; year: number; hours: string }[] = [];
+  totalMonthlyHours: string = '0:00'; // Resumen mensual
 
   ngOnInit(): void {
     this.generateCalendar();
     this.loadRecords();
     this.calculateWeeklyHours();
+    this.calculateMonthlyHours();
   }
 
   generateCalendar(): void {
@@ -36,7 +38,7 @@ export class CalendarioComponent {
     const totalDays = lastDay.getDate();
 
     this.weeks = [];
-    let week: { days: (number | null)[]; hours: number } = { days: [], hours: 0 };
+    let week: { days: (number | null)[]; hours: string } = { days: [], hours: '0:00' };
 
     // Rellenar los días vacíos al inicio del mes
     for (let i = 0; i < startDay; i++) {
@@ -48,7 +50,7 @@ export class CalendarioComponent {
       week.days.push(day);
       if (week.days.length === 7) {
         this.weeks.push(week);
-        week = { days: [], hours: 0 };
+        week = { days: [], hours: '0:00' };
       }
     }
 
@@ -61,6 +63,7 @@ export class CalendarioComponent {
     }
 
     this.calculateWeeklyHours();
+    this.calculateMonthlyHours();
   }
 
   openModal(day: number): void {
@@ -69,27 +72,37 @@ export class CalendarioComponent {
 
   closeModal(): void {
     this.selectedDay = null;
+    this.entryTime = '';
+    this.exitTime = '';
   }
 
   saveHours(): void {
     if (this.entryTime && this.exitTime && this.selectedDay) {
       const entry = new Date(`1970-01-01T${this.entryTime}`);
       const exit = new Date(`1970-01-01T${this.exitTime}`);
-      const hours = (exit.getTime() - entry.getTime()) / (1000 * 60 * 60);
+      const differenceMs = exit.getTime() - entry.getTime();
+
+      // Convertir la diferencia a horas y minutos
+      const hours = Math.floor(differenceMs / (1000 * 60 * 60));
+      const minutes = Math.floor((differenceMs % (1000 * 60 * 60)) / (1000 * 60));
+
+      // Guardar las horas en formato HH:MM
+      const formattedHours = `${hours}:${minutes.toString().padStart(2, '0')}`;
 
       this.records.push({
         day: this.selectedDay,
         month: this.currentDate.getMonth(),
         year: this.currentDate.getFullYear(),
-        hours,
+        hours: formattedHours,
       });
       this.saveRecords();
       this.calculateWeeklyHours();
+      this.calculateMonthlyHours();
       this.closeModal();
     }
   }
 
-  getHours(day: number): number | null {
+  getHours(day: number): string | null {
     const record = this.records.find(
       (r) =>
         r.day === day &&
@@ -104,16 +117,44 @@ export class CalendarioComponent {
     const month = this.currentDate.getMonth();
 
     this.weeks.forEach((week) => {
-      week.hours = week.days.reduce((sum: number, day) => {
+      let totalMinutes = 0;
+
+      week.days.forEach((day) => {
         if (day !== null) {
           const record = this.records.find(
             (r) => r.day === day && r.month === month && r.year === year
           );
-          return sum + (record ? record.hours : 0);
+          if (record && typeof record.hours === 'string') {
+            const [hours, minutes] = record.hours.split(':').map(Number);
+            totalMinutes += hours * 60 + minutes;
+          }
         }
-        return sum;
-      }, 0);
+      });
+
+      // Convertir el total de minutos a horas y minutos
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      week.hours = `${hours}:${minutes.toString().padStart(2, '0')}`;
     });
+  }
+
+  calculateMonthlyHours(): void {
+    const year = this.currentDate.getFullYear();
+    const month = this.currentDate.getMonth();
+
+    let totalMinutes = 0;
+
+    this.records.forEach((record) => {
+      if (record.month === month && record.year === year && typeof record.hours === 'string') {
+        const [hours, minutes] = record.hours.split(':').map(Number);
+        totalMinutes += hours * 60 + minutes;
+      }
+    });
+
+    // Convertir el total de minutos a horas y minutos
+    const hours = Math.floor(totalMinutes / 60);
+    const minutes = totalMinutes % 60;
+    this.totalMonthlyHours = `${hours}:${minutes.toString().padStart(2, '0')}`;
   }
 
   saveRecords(): void {
@@ -122,7 +163,29 @@ export class CalendarioComponent {
 
   loadRecords(): void {
     const records = localStorage.getItem('workRecords');
-    this.records = records ? JSON.parse(records) : [];
+    if (records) {
+      this.records = JSON.parse(records).map((record: any) => {
+        // Asegurar que record.hours sea un string en formato HH:MM
+        if (typeof record.hours !== 'string') {
+          const hours = Math.floor(record.hours);
+          const minutes = Math.round((record.hours - hours) * 60);
+          record.hours = `${hours}:${minutes.toString().padStart(2, '0')}`;
+        }
+        return record;
+      });
+    } else {
+      this.records = [];
+    }
+  }
+
+  clearStorage(): void {
+    if (confirm('¿Estás seguro de que quieres borrar todos los registros?')) {
+      localStorage.removeItem('workRecords');
+      this.records = [];
+      this.generateCalendar();
+      this.calculateWeeklyHours();
+      this.calculateMonthlyHours();
+    }
   }
 
   previousMonth(): void {
@@ -141,6 +204,3 @@ export class CalendarioComponent {
     this.generateCalendar();
   }
 }
-
-
-
