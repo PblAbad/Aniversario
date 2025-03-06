@@ -14,12 +14,12 @@ export class ProposicionComponent {
 
   moverBoton() {
     // Obtener el tamaño de la ventana
-    const maxWidth = window.innerWidth - 1000; // Evita que se salga de la pantalla
-    const maxHeight = window.innerHeight - 1000;
+    const maxWidth = window.innerWidth - 100; // Ajusta el rango para que no se salga de la pantalla
+    const maxHeight = window.innerHeight - 100;
 
     // Generar posiciones aleatorias dentro del rango
-    this.posX = Math.floor(Math.random() * maxWidth);
-    this.posY = Math.floor(Math.random() * maxHeight);
+    this.posX = Math.floor(Math.random() * maxWidth) - (maxWidth / 2);
+    this.posY = Math.floor(Math.random() * maxHeight) - (maxHeight / 2);
   }
   yesClick(){
     
