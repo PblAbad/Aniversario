@@ -42,6 +42,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'proposicion',
+        loadComponent: () =>
+          import('./components/proposicion/proposicion.component').then(
+            (m) => m.ProposicionComponent
+          ),
+      },
+      {
         path: '**',
         redirectTo: 'home',
       },

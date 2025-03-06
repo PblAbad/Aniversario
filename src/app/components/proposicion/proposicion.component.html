@@ -1,0 +1,23 @@
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-purple-100 to-pink-100 py-12">
+  <div class="bg-white rounded-lg shadow-2xl p-8 max-w-2xl w-full text-center relative">
+    <!-- Pregunta -->
+    <h2 class="text-4xl font-bold text-pink-600 mb-6">¿Quieres ser mi amigo?</h2>
+
+    <!-- Botones -->
+    <div class="flex justify-center space-x-6 mt-6">
+      <button 
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded transition duration-300"
+      >
+        Sí
+      </button>
+      
+      <button 
+        class="bg-red-500 text-white font-bold py-2 px-6 rounded absolute transition-transform duration-300"
+        [ngStyle]="{'top.px': posY, 'left.px': posX}"
+        (mouseenter)="moverBoton()"
+      >
+        No
+      </button>
+    </div>
+  </div>
+</div>
