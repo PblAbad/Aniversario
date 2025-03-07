@@ -18,7 +18,7 @@ export class MensajesComponent implements OnInit{
     "Tal",
     "Cual",
     "Pascual",
-    "we",
+    "Eres el amor de mi vida",
     "rw",
     "dsf",
     "sf",

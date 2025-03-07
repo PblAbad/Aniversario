@@ -9,9 +9,17 @@ import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
   styleUrl: './proposicion.component.css'
 })
 export class ProposicionComponent {
+  showModal: boolean = false;
   posX = 0;
   posY = 0;
+  
+  openModal(): void {
+    this.showModal = true; // Mostrar el modal
+  }
 
+  closeModal(): void {
+    this.showModal = false; // Ocultar el modal
+  }
   moverBoton() {
     // Obtener el tamaño de la ventana
     const maxWidth = window.innerWidth - 100; // Ajusta el rango para que no se salga de la pantalla

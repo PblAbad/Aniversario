@@ -220,6 +220,14 @@ export class CalendarioComponent {
       this.records = [];
     }
   }
+  isToday(day: number): boolean {
+    const today = new Date();
+    return (
+      day === today.getDate() &&
+      this.currentDate.getMonth() === today.getMonth() &&
+      this.currentDate.getFullYear() === today.getFullYear()
+    );
+  }
 
   previousMonth(): void {
     this.currentDate.setMonth(this.currentDate.getMonth() - 1);

@@ -12,9 +12,9 @@ import { RouterLink } from '@angular/router';
 export class HomeComponent {
   // Lista de imágenes para el carrusel
   images = [
-    'assets/images/foto1.jpg',
-    'assets/images/foto2.jpg',
-    'assets/images/foto3.jpg',
+    'assets/images/bubble.jpeg',
+    'assets/images/cafeteria.jpg',
+    'assets/images/manos.jpeg',
   ];
 
   // Índice de la imagen actual
