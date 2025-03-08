@@ -15,14 +15,14 @@ export class MensajesComponent implements OnInit{
   segundos: number = 0;
   private countdownInterval: any;
   mensajes: string[] = [
-    "Tal",
-    "Cual",
-    "Pascual",
+    "Te amo con todo mi corazón",
+    "Siempre estaré para ti",
+    "Quiero estar a tu lado siempre",
     "Eres el amor de mi vida",
-    "rw",
-    "dsf",
-    "sf",
-    "xc",
+    "Puedes con todo cielo, confío plenamente en ti",
+    "No puedo estar más orgulloso de ti",
+    "Vas a conseguir todo lo que te propongas",
+    "No se puede ser tan perfecta",
     "wewe",
     "qrqr",
     "adg",
